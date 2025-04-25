@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace AppStore.Data.Data
 {
-    public class ApiDbContext : IdentityDbContext
+    public class AppDbContext : IdentityDbContext
     {
 
-        public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
 
         {
 
@@ -40,7 +40,7 @@ namespace AppStore.Data.Data
 
                 property.SetColumnType("varchar(100)");
 
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApiDbContext).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
 

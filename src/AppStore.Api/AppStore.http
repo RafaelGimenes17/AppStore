@@ -1,0 +1,6 @@
+@AppStore_HostAddress = http://localhost:5005
+
+GET {{AppStore_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

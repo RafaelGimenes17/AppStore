@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AppStore.Data.Migrations
 {
-    [DbContext(typeof(ApiDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20250420000339_MigracaoInicial")]
     partial class MigracaoInicial
     {
