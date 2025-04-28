@@ -1,7 +1,7 @@
-﻿@model IEnumerable<AppStore.Data.Models.Produto>
+﻿@model IEnumerable<AppStore.Data.Models.Categoria>
 
 @{
-    ViewData["Title"] = "Lista de produtos";
+    ViewData["Title"] = "Lista de categorias";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -25,23 +25,14 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Codigo)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Nome)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Descricao)
+                @Html.DisplayNameFor(model => model.Ativo)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Imagem)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Preco)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.QuantidadeEstoque)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Categoria.Nome)
-            </th>          
             <th></th>
         </tr>
     </thead>
@@ -49,25 +40,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.Codigo)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Nome)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Descricao)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Imagem)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Preco)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QuantidadeEstoque)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CategoriaId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VendedorId)
+                @Html.DisplayFor(modelItem => item.Ativo)
             </td>
             <td>
                 <a asp-action="Details" class="btn btn-warning" asp-route-id="@item.Id"><spam class="fa fa-search"></spam></a>
