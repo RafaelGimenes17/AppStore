@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppStore.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -54,6 +54,12 @@ namespace AppStore.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<Guid>("CategoriaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CategoriaId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasColumnType("varchar(100)");
@@ -72,7 +78,17 @@ namespace AppStore.Data.Migrations
                     b.Property<int>("QuantidadeEstoque")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("VendedorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("VendedorId1")
+                        .HasColumnType("varchar(100)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoriaId1");
+
+                    b.HasIndex("VendedorId1");
 
                     b.ToTable("Produtos");
                 });
@@ -247,9 +263,11 @@ namespace AppStore.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("ProviderKey")
+                        .HasMaxLength(128)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("ProviderDisplayName")
@@ -287,9 +305,11 @@ namespace AppStore.Data.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Name")
+                        .HasMaxLength(128)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Value")
@@ -298,6 +318,22 @@ namespace AppStore.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("AppStore.Data.Models.Produto", b =>
+                {
+                    b.HasOne("AppStore.Data.Models.Categoria", "Categoria")
+                        .WithMany("Produtos")
+                        .HasForeignKey("CategoriaId1")
+                        .IsRequired();
+
+                    b.HasOne("AppStore.Data.Models.Vendedor", "Vendedor")
+                        .WithMany("Produtos")
+                        .HasForeignKey("VendedorId1");
+
+                    b.Navigation("Categoria");
+
+                    b.Navigation("Vendedor");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -349,6 +385,16 @@ namespace AppStore.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AppStore.Data.Models.Categoria", b =>
+                {
+                    b.Navigation("Produtos");
+                });
+
+            modelBuilder.Entity("AppStore.Data.Models.Vendedor", b =>
+                {
+                    b.Navigation("Produtos");
                 });
 #pragma warning restore 612, 618
         }

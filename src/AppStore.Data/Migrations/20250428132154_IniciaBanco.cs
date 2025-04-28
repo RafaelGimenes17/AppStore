@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AppStore.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Identity : Migration
+    public partial class IniciaBanco : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,6 +48,36 @@ namespace AppStore.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Categorias",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Codigo = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Nome = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Ativo = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categorias", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Vendedores",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Nome = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Email = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Senha = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Ativo = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Vendedores", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -96,8 +126,8 @@ namespace AppStore.Data.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "varchar(100)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "varchar(100)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "varchar(100)", maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(type: "varchar(100)", maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "varchar(100)", nullable: true),
                     UserId = table.Column<string>(type: "varchar(100)", nullable: false)
                 },
@@ -141,8 +171,8 @@ namespace AppStore.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "varchar(100)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "varchar(100)", nullable: false),
-                    Name = table.Column<string>(type: "varchar(100)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "varchar(100)", maxLength: 128, nullable: false),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 128, nullable: false),
                     Value = table.Column<string>(type: "varchar(100)", nullable: true)
                 },
                 constraints: table =>
@@ -154,6 +184,37 @@ namespace AppStore.Data.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Produtos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Descricao = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Imagem = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Preco = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    QuantidadeEstoque = table.Column<int>(type: "int", nullable: false),
+                    CategoriaId1 = table.Column<int>(type: "int", nullable: false),
+                    VendedorId1 = table.Column<string>(type: "varchar(100)", nullable: true),
+                    CategoriaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VendedorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Produtos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Produtos_Categorias_CategoriaId1",
+                        column: x => x.CategoriaId1,
+                        principalTable: "Categorias",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Produtos_Vendedores_VendedorId1",
+                        column: x => x.VendedorId1,
+                        principalTable: "Vendedores",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -194,6 +255,16 @@ namespace AppStore.Data.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Produtos_CategoriaId1",
+                table: "Produtos",
+                column: "CategoriaId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Produtos_VendedorId1",
+                table: "Produtos",
+                column: "VendedorId1");
         }
 
         /// <inheritdoc />
@@ -215,10 +286,19 @@ namespace AppStore.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Produtos");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Categorias");
+
+            migrationBuilder.DropTable(
+                name: "Vendedores");
         }
     }
 }

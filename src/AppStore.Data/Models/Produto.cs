@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -17,13 +18,23 @@ namespace AppStore.Data.Models
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public string? Descricao { get; set; }
         public string Imagem { get; set; }
+
+        [Range (0, 100.000, ErrorMessage = "O valor do campo preço deve estar entre {0} and {1}.")]
+        [RegularExpression(@"^(?=.*[1-9])([0-9]{0,3}(?:,[0-9]{1,2})?)$", ErrorMessage = "O campo {0} está em formato inválido.")]
         public decimal Preco { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public int QuantidadeEstoque { get; set; }
-        //public Categoria Categoria { get; set; }
-        //public Vendedor Vendedor { get; set; }
-        //public Guid CategoriaId { get; set; }
-        //public Guid VendedorId { get; set; }
+
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        public Categoria Categoria { get; set; }
+
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        public Vendedor Vendedor { get; set; }
+
+        [DisplayName("Categoria")]
+        public Guid CategoriaId { get; set; }
+        
+        public Guid VendedorId { get; set; }
     }
 }
