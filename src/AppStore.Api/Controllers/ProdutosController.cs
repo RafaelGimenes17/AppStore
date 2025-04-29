@@ -22,6 +22,7 @@ namespace AppStore.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Produto>>> GetProdutos()
         {
             if (_context.Produtos == null) return NotFound();

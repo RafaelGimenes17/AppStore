@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AppStore.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class IniciaBanco : Migration
+    public partial class CreateDataBase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -71,8 +71,7 @@ namespace AppStore.Data.Migrations
                 {
                     Id = table.Column<string>(type: "varchar(100)", nullable: false),
                     Nome = table.Column<string>(type: "varchar(100)", nullable: false),
-                    Email = table.Column<string>(type: "varchar(100)", nullable: false),
-                    Senha = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Email = table.Column<string>(type: "varchar(100)", maxLength: 60, nullable: false),
                     Ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -198,7 +197,7 @@ namespace AppStore.Data.Migrations
                     Preco = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     QuantidadeEstoque = table.Column<int>(type: "int", nullable: false),
                     CategoriaId1 = table.Column<int>(type: "int", nullable: false),
-                    VendedorId1 = table.Column<string>(type: "varchar(100)", nullable: true),
+                    VendedorId1 = table.Column<string>(type: "varchar(100)", nullable: false),
                     CategoriaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     VendedorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },

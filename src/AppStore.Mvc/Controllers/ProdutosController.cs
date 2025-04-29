@@ -17,7 +17,6 @@ namespace AppStore.Mvc.Controllers
             _context = context;
         }
 
-        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             ViewBag.Sucesso = "Listagem bem sucedida!";
@@ -82,15 +81,15 @@ namespace AppStore.Mvc.Controllers
 
         [HttpPost("editar/{id:int}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Descricao,Imagem,Preco,QuantidadeEstoque,CategoriaId,VendedorId")] Produto produto)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Descricao,Imagem,Preco,QuantidadeEstoque")] Produto produto)
         {
             if (id != produto.Id)
             {
                 return NotFound();
             }
 
-            //ModelState.Remove("CategoriaId");
-            //ModelState.Remove("VendedorId");
+            ModelState.Remove("CategoriaId");
+            ModelState.Remove("VendedorId");
 
             if (ModelState.IsValid)
             {

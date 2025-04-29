@@ -3,16 +3,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AppStore.Api.Configuration
 {
-    public static class DbContextConfig
-    {
-        public static WebApplicationBuilder AddDbContextConfig(this WebApplicationBuilder builder)
+    public static class DbMigrationHelperExtension
+    {       
+        public static void UseDbMigrationHelper(this WebApplication app)
         {
-            builder.Services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
+            DbMigrationHelpers.EnsureSeedData(app).Wait();
+        }        
 
-            return builder;
+        public static class DbMigrationHelpers
+        {
+            public static async Task EnsureSeedData(WebApplication serviceScope)
+            {
+                var services = serviceScope.Services.CreateScope().ServiceProvider;
+                await EnsureSeedData(services);
+            }
+
+            public static async Task EnsureSeedData(IServiceProvider serviceProvider)
+            {
+                using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+                var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
+
+                var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                await context.Database.MigrateAsync();
+            }
         }
     }
 }
+

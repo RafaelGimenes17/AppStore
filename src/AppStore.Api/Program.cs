@@ -2,11 +2,13 @@ using AppStore.Api.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//builder.AddDatabaseSelector();
+
 builder
     .AddApiConfig()
     .AddCorsConfig()
-    .AddSwaggerConfig()
-    .AddDbContextConfig()
+    .AddSwaggerConfig()    
+    .AddDatabaseSelector()
     .AddIdentityConfig();
 
 var app = builder.Build();
@@ -19,6 +21,8 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
+    app.UseSwagger();
+    app.UseSwaggerUI();
     app.UseCors("Production");
 }
 
@@ -29,5 +33,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseDbMigrationHelper();
 
 app.Run();

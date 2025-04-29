@@ -82,6 +82,7 @@ namespace AppStore.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("VendedorId1")
+                        .IsRequired()
                         .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
@@ -103,13 +104,10 @@ namespace AppStore.Data.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
+                        .HasMaxLength(60)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("Senha")
                         .IsRequired()
                         .HasColumnType("varchar(100)");
 
@@ -329,7 +327,8 @@ namespace AppStore.Data.Migrations
 
                     b.HasOne("AppStore.Data.Models.Vendedor", "Vendedor")
                         .WithMany("Produtos")
-                        .HasForeignKey("VendedorId1");
+                        .HasForeignKey("VendedorId1")
+                        .IsRequired();
 
                     b.Navigation("Categoria");
 
