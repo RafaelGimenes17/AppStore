@@ -1,6 +1,5 @@
 ﻿using AppStore.Data.Data;
 using AppStore.Data.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace AppStore.Mvc.Configurations
@@ -28,7 +27,44 @@ namespace AppStore.Mvc.Configurations
 
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             
-            await context.Database.MigrateAsync();
+            //await context.Database.MigrateAsync();
+
+            //await EnsureSeedProducts(context);
+        }
+
+        private static async Task EnsureSeedProducts(AppDbContext context)
+        {
+            if (context.Categorias.Any())
+                return;
+
+            await context.Categorias.AddAsync(new Categoria()
+            {   
+                Nome = "Canetas",
+                Ativo = true
+                //Produtos
+            });
+
+            await context.SaveChangesAsync();
+
+            if (context.Produtos.Any())
+                return;
+
+            await context.Produtos.AddAsync(new Produto()
+            {
+                Nome = "Caneta Bic",
+                Descricao = "Caneta Bic",
+                //Imagem
+                Preco = 100,
+                QuantidadeEstoque = 2,
+
+                //Categoria = 
+                //Vendedor
+                //CategoriaId
+                //VendedorId
+            });
+
+            await context.SaveChangesAsync();
+
         }
     }
 }

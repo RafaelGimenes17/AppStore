@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,25 +18,30 @@ namespace AppStore.Data.Models
         public string? Nome { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        public string? Descricao { get; set; }
-        public string Imagem { get; set; }
+        [Display(Name = "Descrição")]
+        public string Descricao { get; set; } = string.Empty;
 
-        [Range (0, 100.000, ErrorMessage = "O valor do campo preço deve estar entre {0} and {1}.")]
-        [RegularExpression(@"^(?=.*[1-9])([0-9]{0,3}(?:,[0-9]{1,2})?)$", ErrorMessage = "O campo {0} está em formato inválido.")]
+        [Display(Name = "Imagem do Produto")]
+        public string Imagem { get; set; } = string.Empty;
+
+        [NotMapped]
+        public IFormFile? ImagemUpload { get; set; }
+
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        [Range (1, int.MaxValue, ErrorMessage = "O preço deve ser maior que zero")]
+        [Display(Name = "Preço")]
         public decimal Preco { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        [Display(Name = "Quantidade Estoque")]
         public int QuantidadeEstoque { get; set; }
-
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        public Categoria Categoria { get; set; }
-
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
+               
+        public string VendedorId { get; set; }
         public Vendedor Vendedor { get; set; }
 
-        [DisplayName("Categoria")]
-        public Guid CategoriaId { get; set; }
-        
-        public Guid VendedorId { get; set; }
+        public int CategoriaId { get; set; }
+        public Categoria Categoria{ get; set; }
+
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AppStore.Data.Data;
 using AppStore.Data.Models;
+using AppStore.Mvc.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +12,12 @@ namespace AppStore.Mvc.Controllers
     public class ProdutosController : Controller
     {
         private readonly AppDbContext _context;
+        //private readonly IImageUploadService _imageUploadService;
 
         public ProdutosController(AppDbContext context)
         {
             _context = context;
+            //_imageUploadService = imageUploadService;
         }
 
         public async Task<IActionResult> Index()
@@ -52,10 +55,23 @@ namespace AppStore.Mvc.Controllers
                 
         [HttpPost("novo")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome,Descricao,Imagem,Preco,QuantidadeEstoque,CategoriaId,VendedorId")] Produto produto)
+        public async Task<IActionResult> Create([Bind("Id,Nome,Descricao,ImagemUpload,Preco,QuantidadeEstoque,CategoriaId,VendedorId")] Produto produto)
         {
+            ModelState.Remove("Categoria");
+            ModelState.Remove("Vendedor");
+            ModelState.Remove("VendedorId");
+
             if (ModelState.IsValid)
             {
+                var imgPrefixo = Guid.NewGuid() + "_";
+                if (!await UploadArquivo(produto.ImagemUpload, imgPrefixo))
+                {
+                    return View(produto);
+                }
+
+                produto.Imagem = imgPrefixo + produto.ImagemUpload.FileName;
+                produto.VendedorId = "b089d169-04c5-4697-9851-54d3660062a4";
+
                 _context.Add(produto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -81,7 +97,7 @@ namespace AppStore.Mvc.Controllers
 
         [HttpPost("editar/{id:int}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Descricao,Imagem,Preco,QuantidadeEstoque")] Produto produto)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Descricao,ImagemUpload,Preco,QuantidadeEstoque")] Produto produto)
         {
             if (id != produto.Id)
             {
@@ -91,10 +107,26 @@ namespace AppStore.Mvc.Controllers
             ModelState.Remove("CategoriaId");
             ModelState.Remove("VendedorId");
 
+            var produtoDb = await _context.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+
             if (ModelState.IsValid)
             {
                 try
                 {
+                    produto.Imagem = produtoDb.Imagem;
+
+                    if (produto.ImagemUpload != null)
+                    {
+                        var imgPrefixo = Guid.NewGuid() + "_";
+
+                        if (!await UploadArquivo(produto.ImagemUpload, imgPrefixo))
+                        {
+                            return View(produto);
+                        }
+
+                        produto.Imagem = imgPrefixo + produto.ImagemUpload.FileName;
+                    }
+
                     _context.Update(produto);
                     await _context.SaveChangesAsync();
                 }
@@ -152,6 +184,26 @@ namespace AppStore.Mvc.Controllers
         private bool ProdutoExists(int id)
         {
             return _context.Produtos.Any(e => e.Id == id);
+        }
+
+        private async Task<bool> UploadArquivo(IFormFile arquivo, string imgPrefixo)
+        {
+            if (arquivo.Length <= 0) return false;
+
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", imgPrefixo + arquivo.FileName);
+
+            if (System.IO.File.Exists(path))
+            {
+                ModelState.AddModelError(string.Empty, "Já existe um arquivo com este nome!");
+                return false;
+            }
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await arquivo.CopyToAsync(stream);
+            }
+
+            return true;
         }
     }
 }

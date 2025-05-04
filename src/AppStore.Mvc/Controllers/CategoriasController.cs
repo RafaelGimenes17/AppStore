@@ -53,7 +53,9 @@ namespace AppStore.Mvc.Controllers
         [HttpPost("novo")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Codigo,Nome,Ativo")] Categoria categoria)
-        {
+        {   
+            ModelState.Remove("Produtos");
+
             if (ModelState.IsValid)
             {
                 _context.Add(categoria);
@@ -87,6 +89,8 @@ namespace AppStore.Mvc.Controllers
             {
                 return NotFound();
             }
+
+            ModelState.Remove("Produtos");
 
             if (ModelState.IsValid)
             {
