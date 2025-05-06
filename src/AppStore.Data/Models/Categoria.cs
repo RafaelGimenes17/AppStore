@@ -20,5 +20,6 @@ namespace AppStore.Data.Models
         public bool Ativo { get; set; }
 
         public IEnumerable<Produto> Produtos { get; set; }
+
     }
 }

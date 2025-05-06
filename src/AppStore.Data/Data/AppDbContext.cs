@@ -33,18 +33,18 @@ namespace AppStore.Data.Data
 
         {
 
-            //foreach (var property in modelBuilder.Model.GetEntityTypes()
+            foreach (var property in modelBuilder.Model.GetEntityTypes()
 
-            //    .SelectMany(e => e.GetProperties()
-            //    .Where(p => p.ClrType == typeof(string))))
+                .SelectMany(e => e.GetProperties()
+                .Where(p => p.ClrType == typeof(string))))
 
-            //    property.SetColumnType("varchar(100)");
+                property.SetColumnType("varchar(100)");
 
-            //modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
-            //foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
 
-            //    relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
+                relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
 
             base.OnModelCreating(modelBuilder);
 

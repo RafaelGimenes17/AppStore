@@ -43,16 +43,17 @@
                 <span asp-validation-for="Preco" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="QuantidadeEstoque" class="control-label"></label>
-                <input asp-for="QuantidadeEstoque" class="form-control" />
-                <span asp-validation-for="QuantidadeEstoque" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
+           @*  <div class="form-group">
                 <label asp-for="CategoriaId" class="control-label"></label>
                 <input asp-for="CategoriaId" class="form-control" />
                 <span asp-validation-for="CategoriaId" class="text-danger"></span>
+            </div> *@
+
+            <div class="form-group">
+                <label asp-for="CategoriaId" class="control-label"></label>
+                <select class="form-control" asp-for="CategoriaId" asp-items="ViewBag.CategoriaId">
+                    <option value=""></option>
+                </select>
             </div>
 
             <div class="form-group">

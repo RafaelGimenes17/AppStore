@@ -39,9 +39,10 @@ namespace AppStore.Data.Models
         public string VendedorId { get; set; }
         public Vendedor Vendedor { get; set; }
 
+        [DisplayName("Categoria")]
         public int CategoriaId { get; set; }
         public Categoria Categoria{ get; set; }
-
+        //public IEnumerable<Categoria> Categoria { get; set; }
 
     }
 }

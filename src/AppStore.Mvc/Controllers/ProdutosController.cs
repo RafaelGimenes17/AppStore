@@ -2,7 +2,10 @@
 using AppStore.Data.Models;
 using AppStore.Mvc.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace AppStore.Mvc.Controllers
@@ -12,21 +15,26 @@ namespace AppStore.Mvc.Controllers
     public class ProdutosController : Controller
     {
         private readonly AppDbContext _context;
-        //private readonly IImageUploadService _imageUploadService;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ProdutosController(AppDbContext context)
+        public ProdutosController(AppDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
-            //_imageUploadService = imageUploadService;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.Sucesso = "Listagem bem sucedida!";
+            var user = await GetUsuarioLogado();
 
-            return _context.Produtos != null ?
-                View(await _context.Produtos.ToListAsync()) :
-                Problem("Entity set AppDbContext.Produtos' is null.");
+            var dataQuery = _context.Produtos
+                                    .Include(p => p.Categoria)
+                                    .Include(p => p.Vendedor)
+                                    .Where(e => e.VendedorId == user.Id);
+
+            var result = await dataQuery.ToListAsync();
+
+            return View(result);
         }
 
         [Route("detalhes/{id:int}")]
@@ -50,9 +58,12 @@ namespace AppStore.Mvc.Controllers
         [Route("novo")]
         public IActionResult Create()
         {
+            var produto = new Produto(); //{ Ativo = true };
+            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Nome");
+
             return View();
         }
-                
+
         [HttpPost("novo")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nome,Descricao,ImagemUpload,Preco,QuantidadeEstoque,CategoriaId,VendedorId")] Produto produto)
@@ -60,6 +71,8 @@ namespace AppStore.Mvc.Controllers
             ModelState.Remove("Categoria");
             ModelState.Remove("Vendedor");
             ModelState.Remove("VendedorId");
+
+            var user = await GetUsuarioLogado();
 
             if (ModelState.IsValid)
             {
@@ -70,7 +83,7 @@ namespace AppStore.Mvc.Controllers
                 }
 
                 produto.Imagem = imgPrefixo + produto.ImagemUpload.FileName;
-                produto.VendedorId = "b089d169-04c5-4697-9851-54d3660062a4";
+                produto.VendedorId = user.Id;
 
                 _context.Add(produto);
                 await _context.SaveChangesAsync();
@@ -204,6 +217,13 @@ namespace AppStore.Mvc.Controllers
             }
 
             return true;
+        }
+
+        private async Task<IdentityUser> GetUsuarioLogado()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            return user;
         }
     }
 }
