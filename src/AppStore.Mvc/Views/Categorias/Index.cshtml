@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<AppStore.Data.Models.Categoria>
 
 @{
-    ViewData["Title"] = "Lista de categorias";
+    ViewData["Title"] = "Lista de Categorias";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -19,6 +19,7 @@
 
 
 <p>
+    <a class="btn btn-secondary" asp-controller="Produtos" asp-action="Index"><i class="fas fa-reply"></i> Voltar</a>
     <a class="btn btn-primary" asp-action="Create"><spam class="fa fa-plus"></spam> Novo</a>
 </p>
 <table class="table">

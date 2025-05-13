@@ -121,17 +121,26 @@ namespace AppStore.Mvc.Controllers
         [Route("excluir/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
+            var produto = await _context.Produtos.FirstOrDefaultAsync(p => p.CategoriaId == id);
+
+            if (produto != null)
+            {
+                ViewBag.Sucesso = "Categoria não pode ser excluida pois existe um ou mais produtos relacionados!";
+
+                return NotFound();
+            }
+
             if (_context.Categorias == null)
             {
                 return NotFound();
             }
 
-            var categoria = await _context.Categorias
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var categoria = await _context.Categorias.FirstOrDefaultAsync(m => m.Id == id);
+
             if (categoria == null)
             {
                 return NotFound();
-            }
+            }            
 
             return View(categoria);
         }
@@ -141,6 +150,7 @@ namespace AppStore.Mvc.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var categoria = await _context.Categorias.FindAsync(id);
+            
             if (categoria != null)
             {
                 _context.Categorias.Remove(categoria);

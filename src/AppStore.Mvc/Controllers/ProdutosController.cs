@@ -99,6 +99,8 @@ namespace AppStore.Mvc.Controllers
             {
                 return NotFound();
             }
+           
+            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Nome");
 
             var produto = await _context.Produtos.FindAsync(id);
             if (produto == null)
@@ -110,17 +112,20 @@ namespace AppStore.Mvc.Controllers
 
         [HttpPost("editar/{id:int}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Descricao,ImagemUpload,Preco,QuantidadeEstoque")] Produto produto)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Descricao,ImagemUpload,Preco,QuantidadeEstoque,CategoriaId")] Produto produto)
         {
             if (id != produto.Id)
             {
                 return NotFound();
             }
 
-            ModelState.Remove("CategoriaId");
+            ModelState.Remove("Categoria");
+            ModelState.Remove("Vendedor");
             ModelState.Remove("VendedorId");
 
             var produtoDb = await _context.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+
+            var user = await GetUsuarioLogado();
 
             if (ModelState.IsValid)
             {
@@ -138,6 +143,8 @@ namespace AppStore.Mvc.Controllers
                         }
 
                         produto.Imagem = imgPrefixo + produto.ImagemUpload.FileName;
+
+                        produto.VendedorId = user.Id;                        
                     }
 
                     _context.Update(produto);
@@ -203,7 +210,7 @@ namespace AppStore.Mvc.Controllers
         {
             if (arquivo.Length <= 0) return false;
 
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", imgPrefixo + arquivo.FileName);
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/imagens", imgPrefixo + arquivo.FileName);
 
             if (System.IO.File.Exists(path))
             {

@@ -29,10 +29,12 @@ namespace AppStore.Mvc.Configurations
 
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-            await context.Database.MigrateAsync();
-
             if (env.IsDevelopment() || env.IsEnvironment("Docker") || env.IsStaging())
-                await EnsureSeedProducts(context);            
+            {
+                await context.Database.MigrateAsync();
+
+                await EnsureSeedProducts(context);
+            }                          
         }
 
         private static async Task EnsureSeedProducts(AppDbContext context)
@@ -67,17 +69,15 @@ namespace AppStore.Mvc.Configurations
             });
 
             await context.SaveChangesAsync();
-
-            var idCategoria = 1;
-
+            
             if (context.Categorias.Any())
                 return;
 
-            await context.Categorias.AddAsync(new Categoria()
-            {   
-                //Id = idCategoria,
-                Nome = "Caneta",
-                Ativo = true
+            await context.Categorias.AddRangeAsync(new List<Categoria>()
+            {
+                new Categoria {Id = 1, Nome = "História", Ativo = true },
+                new Categoria {Id = 2, Nome = "Informatica", Ativo = true },
+                new Categoria {Id = 3, Nome = "Ciência", Ativo = true }
             });
 
             await context.SaveChangesAsync();
@@ -87,8 +87,47 @@ namespace AppStore.Mvc.Configurations
 
             await context.Produtos.AddAsync(new Produto()
             {
-                Nome = "Bic",
-                Descricao = "Caneta Bic",
+                Nome = "Livro CSS",
+                Descricao = "Livro CSS v2",
+                Imagem = "",
+                Preco = 100,
+                QuantidadeEstoque = 2,
+                CategoriaId = 1,
+                VendedorId = idUsuario.ToString(),
+            });
+
+            await context.SaveChangesAsync();
+
+            await context.Produtos.AddAsync(new Produto()
+            {
+                Nome = "Livro jQuery",
+                Descricao = "Livro jQuery v2",
+                Imagem = "",
+                Preco = 100,
+                QuantidadeEstoque = 2,
+                CategoriaId = 1,
+                VendedorId = idUsuario.ToString(),
+            });
+
+            await context.SaveChangesAsync();
+
+            await context.Produtos.AddAsync(new Produto()
+            {
+                Nome = "Livro HTML",
+                Descricao = "Livro HTML v2",
+                Imagem = "",
+                Preco = 100,
+                QuantidadeEstoque = 2,
+                CategoriaId = 1,
+                VendedorId = idUsuario.ToString(),
+            });
+
+            await context.SaveChangesAsync();
+
+            await context.Produtos.AddAsync(new Produto()
+            {
+                Nome = "Livro Razor",
+                Descricao = "Livro Razor v2",
                 Imagem = "",
                 Preco = 100,
                 QuantidadeEstoque = 2,
