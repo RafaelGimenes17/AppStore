@@ -2,6 +2,8 @@
 using AppStore.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using System.Diagnostics;
 
 namespace AppStore.Mvc.Configurations
@@ -29,10 +31,12 @@ namespace AppStore.Mvc.Configurations
 
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-            await context.Database.MigrateAsync();
-
             if (env.IsDevelopment() || env.IsEnvironment("Docker") || env.IsStaging())
-                await EnsureSeedProducts(context);            
+            {
+                await context.Database.MigrateAsync();
+
+                await EnsureSeedProducts(context);
+            }                          
         }
 
         private static async Task EnsureSeedProducts(AppDbContext context)
@@ -51,7 +55,7 @@ namespace AppStore.Mvc.Configurations
                 NormalizedEmail = "RAFAEL@GMAIL.COM",
                 AccessFailedCount = 0,
                 LockoutEnabled = false,
-                PasswordHash = "AQAAAAIAAYagAAAAEJ206Ya0hdMjTBVizrDcSg1y+iiQ0fXTps2OkEe1xwDYciWWH0FsUoU/SNBPXf8bXQ==",
+                PasswordHash = "AQAAAAIAAYagAAAAEJ75mY6XdtZcrA4NaWJNrfyfhRunULkp9GWCA9kkl91fsCDJx57VKmVm4MqqS61uwA==", //123@Teste
                 TwoFactorEnabled = false,
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 EmailConfirmed = true,
@@ -67,36 +71,102 @@ namespace AppStore.Mvc.Configurations
             });
 
             await context.SaveChangesAsync();
-
-            var idCategoria = 1;
-
+            
             if (context.Categorias.Any())
                 return;
 
-            await context.Categorias.AddAsync(new Categoria()
-            {   
-                //Id = idCategoria,
-                Nome = "Caneta",
-                Ativo = true
+            await context.Categorias.AddRangeAsync(new List<Categoria>()
+            {
+                new Categoria {Id = 1, Nome = "Livros", Ativo = true },
+                new Categoria {Id = 2, Nome = "Cadernos", Ativo = true },
+                new Categoria {Id = 3, Nome = "Celulares", Ativo = true }
             });
 
             await context.SaveChangesAsync();
 
             if (context.Produtos.Any())
                 return;
+            
 
             await context.Produtos.AddAsync(new Produto()
             {
-                Nome = "Bic",
-                Descricao = "Caneta Bic",
-                Imagem = "",
+                Id = 1,
+                Nome = "Livro Razor",
+                Descricao = "Livro Razor v2",
+                Imagem = "cde60271-e316-40b4-b2a2-307062c66d78_Livro Razor.jpg",
                 Preco = 100,
                 QuantidadeEstoque = 2,
                 CategoriaId = 1,
                 VendedorId = idUsuario.ToString(),
+                Ativo = true
+            });
+
+            await context.Produtos.AddAsync(new Produto()
+            {
+                Id = 2,
+                Nome = "Livro Java",
+                Descricao = "Livro Java v2",
+                Imagem = "40dd4e94-eeac-4f65-9e82-10ba87972601_Livro Java.jpg",
+                Preco = 100,
+                QuantidadeEstoque = 2,
+                CategoriaId = 1,
+                VendedorId = idUsuario.ToString(),
+                Ativo = true
+            });
+
+            await context.Produtos.AddAsync(new Produto()
+            {
+                Id = 3,
+                Nome = "Livro CSS",
+                Descricao = "Livro CSS v2",
+                Imagem = "72a861c5-1bda-42e6-9a8d-d2ccfdad7c88_Livro CSS.jpg",
+                Preco = 100,
+                QuantidadeEstoque = 2,
+                CategoriaId = 1,
+                VendedorId = idUsuario.ToString(),
+                Ativo = true
+            });
+
+            await context.Produtos.AddAsync(new Produto()
+            {
+                Id = 4,
+                Nome = "Livro C#",
+                Descricao = "Livro C# v2",
+                Imagem = "1b7f4c39-dc50-4e50-9f1c-4aa6ca70bd2d_Livro C.jpg",
+                Preco = 100,
+                QuantidadeEstoque = 2,
+                CategoriaId = 1,
+                VendedorId = idUsuario.ToString(),
+                Ativo = true
+            });
+
+            await context.Produtos.AddAsync(new Produto()
+            {
+                Id = 5,
+                Nome = "Caderno Brochura",
+                Descricao = "Caderno Brochura 96 Folhas",
+                Imagem = "d87f92bf-b4da-47c4-a7cb-a4dfdae9a073_Caderno brochura.jpg",
+                Preco = 100,
+                QuantidadeEstoque = 2,
+                CategoriaId = 2,
+                VendedorId = idUsuario.ToString(),
+                Ativo = true
+            });
+
+            await context.Produtos.AddAsync(new Produto()
+            {
+                Id = 6,
+                Nome = "Caderno Desenho",
+                Descricao = "Caderno Desenho 100 Folhas",
+                Imagem = "e3ed1b27-7ace-451c-9562-747c9dae6fd8_Caderno desenho.jpg",
+                Preco = 100,
+                QuantidadeEstoque = 2,
+                CategoriaId = 2,
+                VendedorId = idUsuario.ToString(),
+                Ativo = true
             });
 
             await context.SaveChangesAsync();
-        }
+        }       
     }
 }

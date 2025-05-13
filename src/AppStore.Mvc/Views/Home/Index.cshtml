@@ -1,8 +1,27 @@
-﻿@{
+﻿@using AppStore.Mvc.support
+@model IEnumerable<AppStore.Data.Models.Produto>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4"><i class="fa-solid fa-code"></i> Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row row-cols-1 row-cols-md-4 g-5">
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="card">
+                <div class="text-center">
+                    <img src="@Html.GetPathUrlImagem(item)" class="card-img-top card-image" alt="@item.Imagem" />
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">@item.Nome</h5>
+                    @* <h5 class="card-title">@item.Descricao</h5> *@
+                    <p class="card-text">
+                        @item.Preco.ToString("C")
+                    </p>                    
+                </div>
+            </div>
+        </div>
+    }
+
 </div>

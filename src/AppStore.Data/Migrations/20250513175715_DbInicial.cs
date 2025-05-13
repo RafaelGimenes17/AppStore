@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AppStore.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class CreatDataBase : Migration
+    public partial class DbInicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -195,6 +195,7 @@ namespace AppStore.Data.Migrations
                     Imagem = table.Column<string>(type: "varchar(100)", nullable: false),
                     Preco = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     QuantidadeEstoque = table.Column<int>(type: "int", nullable: false),
+                    Ativo = table.Column<bool>(type: "bit", nullable: false),
                     VendedorId = table.Column<string>(type: "varchar(100)", nullable: false),
                     CategoriaId = table.Column<int>(type: "int", nullable: false)
                 },

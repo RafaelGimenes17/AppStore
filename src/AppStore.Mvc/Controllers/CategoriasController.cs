@@ -18,9 +18,7 @@ namespace AppStore.Mvc.Controllers
         }
 
         public async Task<IActionResult> Index()
-        {
-            ViewBag.Sucesso = "Listagem bem sucedida!";
-
+        {            
             return _context.Categorias != null ?
                 View(await _context.Categorias.ToListAsync()) :
                 Problem("Entity set AppDbContext.Produtos' is null.");
@@ -58,6 +56,8 @@ namespace AppStore.Mvc.Controllers
 
             if (ModelState.IsValid)
             {
+                categoria.Id = _context.Categorias.Count() + 1;
+
                 _context.Add(categoria);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -119,18 +119,27 @@ namespace AppStore.Mvc.Controllers
         }
 
         [Route("excluir/{id:int}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (_context.Categorias == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
             var categoria = await _context.Categorias
-                .FirstOrDefaultAsync(m => m.Id == id);
+                                          .AsNoTracking()
+                                          .Include(e => e.Produtos)
+                                          .FirstOrDefaultAsync(m => m.Id == id);
+
             if (categoria == null)
             {
                 return NotFound();
+            }
+
+            if (categoria.Produtos != null && categoria.Produtos.Any())
+            {
+                TempData.Add("Warning", "Não é posspivel excluir a categoria pois existem produtos vinculados.");
+                return RedirectToAction(nameof(Index));
             }
 
             return View(categoria);
@@ -141,6 +150,7 @@ namespace AppStore.Mvc.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var categoria = await _context.Categorias.FindAsync(id);
+            
             if (categoria != null)
             {
                 _context.Categorias.Remove(categoria);

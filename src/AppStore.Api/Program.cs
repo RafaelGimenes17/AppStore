@@ -2,8 +2,6 @@ using AppStore.Api.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.AddDatabaseSelector();
-
 builder
     .AddApiConfig()
     .AddCorsConfig()

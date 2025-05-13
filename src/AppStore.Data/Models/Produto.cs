@@ -25,24 +25,25 @@ namespace AppStore.Data.Models
         public string Imagem { get; set; } = string.Empty;
 
         [NotMapped]
+        [Display(Name = "Imagem do Produto")]
         public IFormFile? ImagemUpload { get; set; }
 
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        [Range (1, int.MaxValue, ErrorMessage = "O preço deve ser maior que zero")]
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]       
         [Display(Name = "Preço")]
+        [Range(1, int.MaxValue, ErrorMessage = "O preço deve ser maior que zero")]
         public decimal Preco { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [Display(Name = "Quantidade Estoque")]
         public int QuantidadeEstoque { get; set; }
-               
+
+        public bool Ativo { get; set; }
+
         public string VendedorId { get; set; }
         public Vendedor Vendedor { get; set; }
 
         [DisplayName("Categoria")]
         public int CategoriaId { get; set; }
         public Categoria Categoria{ get; set; }
-        //public IEnumerable<Categoria> Categoria { get; set; }
-
     }
 }
