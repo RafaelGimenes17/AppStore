@@ -56,7 +56,8 @@ namespace AppStore.Mvc.Controllers
 
             if (ModelState.IsValid)
             {
-                categoria.Id = _context.Categorias.Count() + 1;
+                if (_context.UsingSqlLite)
+                    categoria.Id = _context.Categorias.Max(e => e.Id) + 1;
 
                 _context.Add(categoria);
                 await _context.SaveChangesAsync();

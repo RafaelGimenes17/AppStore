@@ -57,7 +57,8 @@ namespace AppStore.Api.Controllers
 
             if (!ModelState.IsValid) return ValidationProblem(ModelState);
 
-            categoria.Id = _context.Categorias.Count() + 1;
+            if (_context.UsingSqlLite)
+                categoria.Id = _context.Categorias.Max(e => e.Id) + 1;
 
             _context.Categorias.Add(categoria);
             await _context.SaveChangesAsync();

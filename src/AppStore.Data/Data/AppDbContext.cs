@@ -1,6 +1,7 @@
 ﻿using AppStore.Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,12 @@ namespace AppStore.Data.Data
 {
     public class AppDbContext : IdentityDbContext
     {
+        public bool UsingSqlLite { get; set; }
 
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration) : base(options)
 
         {
+            UsingSqlLite = !string.IsNullOrWhiteSpace(configuration.GetConnectionString("DefaultConnectionLite"));
 
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
