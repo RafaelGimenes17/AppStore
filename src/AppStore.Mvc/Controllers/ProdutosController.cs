@@ -85,6 +85,9 @@ namespace AppStore.Mvc.Controllers
                 produto.Imagem = imgPrefixo + produto.ImagemUpload.FileName;
                 produto.VendedorId = user.Id;
 
+                if (_context.UsingSqlLite)
+                    produto.Id = _context.Produtos.Max(e => e.Id) + 1;
+
                 _context.Add(produto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

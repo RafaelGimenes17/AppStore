@@ -57,7 +57,10 @@ namespace AppStore.Api.Controllers
                 return Problem("Erro ao criar um produto, contato o suporte!");
             }
 
-            if (!ModelState.IsValid) return ValidationProblem(ModelState);            
+            if (!ModelState.IsValid) return ValidationProblem(ModelState);
+
+            if (_context.UsingSqlLite)
+                produto.Id = _context.Produtos.Max(e => e.Id) + 1;
 
             _context.Produtos.Add(produto); 
             await _context.SaveChangesAsync();
