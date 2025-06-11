@@ -1,74 +1,95 @@
 # Feedback - Avaliação Geral
 
 ## Front End
+
 ### Navegação
+  * Pontos positivos:
+    - Projeto MVC funcional com rotas para autenticação, produtos e categorias.
+    - Views bem estruturadas e operação fluida das funcionalidades básicas.
 
   * Pontos negativos:
-    - Apenas setup básico do template, sem implementação real das funcionalidades necessárias.
-    - Faltam views e rotas específicas para os casos de uso do projeto.
+    - Nenhum.
 
 ### Design
-    - Será avaliado na entrega final
+  - Interface administrativa clara, adequada ao contexto de gerenciamento de dados de uma loja virtual.
 
 ### Funcionalidade
+  * Pontos positivos:
+    - CRUD de produtos e categorias operacionais tanto na API quanto no MVC.
+    - Identity configurado nas duas camadas, com autenticação funcional.
+    - Criação do vendedor associada ao usuário do Identity com ID compartilhado.
+    - SQLite, migrations automáticas e seed de dados presentes.
 
   * Pontos negativos:
-    - Não há implementação concreta dos casos de uso especificados.
-    - Faltam funcionalidades essenciais como gestão de produtos e categorias.
-    - Apenas estrutura base do template sem desenvolvimento real.
+    - Produto não é atribuído ao vendedor autenticado (usuário interativo) durante os CRUDs.
+    - Lógica de segurança de domínio ausente ao permitir que qualquer vendedor edite produtos de outro.
+    - Implementação redundante do `DbMigrationHelpers` na API e MVC.
+    - Algumas verificações de ambiente/configuração no controller relacionadas ao SQLite, o que é desnecessário.
 
 ## Back End
+
 ### Arquitetura
   * Pontos positivos:
-    - Divisão em camadas MVC, API e camadas de suporte.
-    - Não há excesso de camadas, mantendo uma estrutura relativamente simples.
+    - Três camadas bem definidas (API, MVC, Core/Data).
+    - Configurações modulares e bem distribuídas.
 
   * Pontos negativos:
-    - As camadas de business e data poderiam ser unificadas em uma única camada Core para simplificar ainda mais.
-    - Implementação muito básica, apenas com o setup inicial dos templates.
+    - `JwtSettings` está misturado com modelos, deveria estar exclusivamente no projeto da API.
+    - Falta de abstrações como repositórios, o que resultou em código repetitivo e menor coesão entre camadas.
 
 ### Funcionalidade
   * Pontos positivos:
-    - Setup básico do Entity Framework.
-    - Estrutura inicial para API e MVC presentes.
+    - Estrutura de autenticação e operações básicas bem implementadas.
+    - Fluxo de autenticação com criação de vendedor vinculado no cadastro do usuário (Identity).
 
   * Pontos negativos:
-    - Não há implementação dos casos de uso de negócio.
-    - Ausência da criação do registro de vendedor no Identity.
-    - Falta implementação do SQLite.
-    - Sem migrations ou seed de dados.
+    - Falta de segurança no vínculo entre produto e vendedor durante edição/exclusão.
 
 ### Modelagem
   * Pontos positivos:
-    - Presença de mapeamentos básicos de entidades na camada de Business.
+    - Entidades bem desenhadas e com relacionamentos consistentes.
+    - Separação de modelos e viewmodels clara.
 
   * Pontos negativos:
-    - Faltam implementações necessárias de acordo com a especificação.
-    - O projeto está muito aquém do propósito especificado.
+    - Nenhum.
 
 ## Projeto
+
 ### Organização
   * Pontos positivos:
-    - Uso da pasta `src` na raiz.
-    - Arquivo de solução (`.sln`) presente na raiz.
-    - Estrutura básica de projetos estabelecida.
+    - Estrutura de pastas organizada, uso correto de solution `.sln` e presença de `README.md` e `FEEDBACK.md`.
 
   * Pontos negativos:
-    - Apesar da estrutura estar correta, falta conteúdo real nas implementações.
-    - Projetos praticamente vazios, apenas com setup inicial.
+    - Arquivo do banco SQLite versionado desnecessariamente.
+    - Seed duplicado em múltiplas camadas.
 
 ### Documentação
+  * Pontos positivos:
+    - Documentação presente, bem formatada e útil.
+    - Swagger configurado para testes da API.
 
   * Pontos negativos:
-    - Ausência de README.md.
-    - Ausência de FEEDBACK.md.
-    - Falta documentação da API via Swagger.
-    - Sem instruções de execução ou configuração do projeto.
+    - Nenhum.
 
 ### Instalação
+  * Pontos positivos:
+    - SQLite configurado com migrations automáticas e seed funcional.
 
   * Pontos negativos:
-    - Não há implementação do SQLite.
-    - Ausência de migrations automáticas.
-    - Falta seed de dados.
-    - Sem instruções ou automação para setup inicial do projeto.
+    - Duplicidade de implementação do seed.
+
+---
+
+# 📊 Matriz de Avaliação de Projetos
+
+| **Critério**                   | **Peso** | **Nota** | **Resultado Ponderado**                  |
+|-------------------------------|----------|----------|------------------------------------------|
+| **Funcionalidade**            | 30%      | 8        | 2,4                                      |
+| **Qualidade do Código**       | 20%      | 8        | 1,6                                      |
+| **Eficiência e Desempenho**   | 20%      | 9        | 1,8                                      |
+| **Inovação e Diferenciais**   | 10%      | 9        | 0,9                                      |
+| **Documentação e Organização**| 10%      | 9        | 0,9                                      |
+| **Resolução de Feedbacks**    | 10%      | 9        | 0,9                                      |
+| **Total**                     | 100%     | -        | **8,5**                                  |
+
+## 🎯 **Nota Final: 8,5 / 10**
